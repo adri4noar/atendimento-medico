@@ -1,0 +1,172 @@
+{
+  "info": {
+    "name": "Atendimento Médico - 1ª entrega",
+    "description": "Rotas da 1ª entrega. Execute na ordem: os IDs criados são guardados nas variáveis da coleção.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:5000/api" },
+    { "key": "medicoId", "value": "" },
+    { "key": "secretariaId", "value": "" },
+    { "key": "pacienteId", "value": "" },
+    { "key": "consultaId", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Usuários",
+      "item": [
+        {
+          "name": "Cadastrar médico (201)",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('201', () => pm.response.to.have.status(201));",
+            "pm.collectionVariables.set('medicoId', pm.response.json().usuario.id);"
+          ] } }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/auth/register",
+            "body": { "mode": "raw", "raw": "{\n  \"nome\": \"Dr. Paulo Mendes\",\n  \"email\": \"Paulo.Mendes@Clinica.com\",\n  \"senha\": \"123456\",\n  \"perfil\": \"medico\",\n  \"crm\": \"CRM-PB 12345\",\n  \"especialidade\": \"Cardiologia\"\n}" }
+          }
+        },
+        {
+          "name": "Cadastrar secretária (201)",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('201', () => pm.response.to.have.status(201));",
+            "pm.collectionVariables.set('secretariaId', pm.response.json().usuario.id);"
+          ] } }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/auth/register",
+            "body": { "mode": "raw", "raw": "{\n  \"nome\": \"Carla Lima\",\n  \"email\": \"carla.lima@clinica.com\",\n  \"senha\": \"123456\",\n  \"perfil\": \"secretaria\"\n}" }
+          }
+        },
+        {
+          "name": "Cadastrar paciente (201)",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('201', () => pm.response.to.have.status(201));",
+            "pm.collectionVariables.set('pacienteId', pm.response.json().usuario.id);"
+          ] } }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/auth/register",
+            "body": { "mode": "raw", "raw": "{\n  \"nome\": \"João Pereira\",\n  \"email\": \"joao.pereira@email.com\",\n  \"senha\": \"123456\",\n  \"perfil\": \"paciente\",\n  \"cpf\": \"123.456.789-09\",\n  \"telefone\": \"(83) 99999-0000\"\n}" }
+          }
+        },
+        {
+          "name": "E-mail repetido (400)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/auth/register",
+            "body": { "mode": "raw", "raw": "{\n  \"nome\": \"Outro Paulo\",\n  \"email\": \"paulo.mendes@clinica.com\",\n  \"senha\": \"123456\",\n  \"perfil\": \"medico\"\n}" }
+          }
+        },
+        {
+          "name": "Perfil inexistente (400)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/auth/register",
+            "body": { "mode": "raw", "raw": "{\n  \"nome\": \"Fulano\",\n  \"email\": \"fulano@email.com\",\n  \"senha\": \"123456\",\n  \"perfil\": \"admin\"\n}" }
+          }
+        },
+        {
+          "name": "Senha curta (400)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/auth/register",
+            "body": { "mode": "raw", "raw": "{\n  \"nome\": \"Beltrano\",\n  \"email\": \"beltrano@email.com\",\n  \"senha\": \"123\",\n  \"perfil\": \"paciente\"\n}" }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Consultas",
+      "item": [
+        {
+          "name": "Agendar consulta (201)",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('201', () => pm.response.to.have.status(201));",
+            "pm.collectionVariables.set('consultaId', pm.response.json().consulta.id);"
+          ] } }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/consultas",
+            "body": { "mode": "raw", "raw": "{\n  \"paciente_id\": {{pacienteId}},\n  \"medico_id\": {{medicoId}},\n  \"data_hora\": \"2026-11-20 14:30\"\n}" }
+          }
+        },
+        {
+          "name": "Mesmo médico e horário (400)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/consultas",
+            "body": { "mode": "raw", "raw": "{\n  \"paciente_id\": {{pacienteId}},\n  \"medico_id\": {{medicoId}},\n  \"data_hora\": \"2026-11-20 14:30\"\n}" }
+          }
+        },
+        {
+          "name": "Perfis trocados (400)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/consultas",
+            "body": { "mode": "raw", "raw": "{\n  \"paciente_id\": {{medicoId}},\n  \"medico_id\": {{pacienteId}},\n  \"data_hora\": \"2026-11-21 09:00\"\n}" }
+          }
+        },
+        {
+          "name": "Listar consultas com nomes (200)",
+          "request": { "method": "GET", "url": "{{baseUrl}}/consultas" }
+        },
+        {
+          "name": "Alterar status e observações (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/consultas/{{consultaId}}",
+            "body": { "mode": "raw", "raw": "{\n  \"status\": \"realizada\",\n  \"observacoes\": \"Paciente com pressão controlada. Retorno em 30 dias.\"\n}" }
+          }
+        },
+        {
+          "name": "Remarcar (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/consultas/{{consultaId}}",
+            "body": { "mode": "raw", "raw": "{\n  \"data_hora\": \"2026-11-27 10:00\",\n  \"status\": \"agendada\"\n}" }
+          }
+        },
+        {
+          "name": "Cancelar (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/consultas/{{consultaId}}",
+            "body": { "mode": "raw", "raw": "{\n  \"status\": \"cancelada\"\n}" }
+          }
+        },
+        {
+          "name": "Status inválido (400)",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/consultas/{{consultaId}}",
+            "body": { "mode": "raw", "raw": "{\n  \"status\": \"adiada\"\n}" }
+          }
+        },
+        {
+          "name": "Consulta inexistente (404)",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/consultas/999999",
+            "body": { "mode": "raw", "raw": "{\n  \"status\": \"cancelada\"\n}" }
+          }
+        }
+      ]
+    }
+  ]
+}
