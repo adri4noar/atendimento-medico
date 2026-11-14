@@ -1,16 +1,15 @@
--- Dados iniciais (fictícios).
---
--- ATENÇÃO: substitua este arquivo pelo banco/dados.sql do projeto de POO,
--- que já traz a primeira secretária e os médicos com senhas em hash BCrypt.
---
--- Enquanto isso, os usuários podem ser criados pela própria API:
---   POST http://localhost:5000/api/auth/register
--- (ver backend/postman/atendimento-medico.postman_collection.json)
-
 USE atendimento_medico;
 
--- Exemplo de formato (descomente e troque o hash por um hash BCrypt real):
--- INSERT INTO usuarios (nome, email, senha, perfil, crm, especialidade) VALUES
---   ('Dra. Ana Souza', 'ana.souza@clinica.com', '$2a$10$...', 'medico', 'CRM-PB 12345', 'Clínica Geral');
--- INSERT INTO usuarios (nome, email, senha, perfil) VALUES
---   ('Carla Lima', 'carla.lima@clinica.com', '$2a$10$...', 'secretaria');
+INSERT INTO usuarios (nome, email, senha, perfil, crm, especialidade, cpf, telefone) VALUES
+('Ana Secretária',  'ana@clinica.com',    '123456', 'secretaria', NULL, NULL, NULL, NULL),
+('Dr. Carlos Lima', 'carlos@clinica.com', '123456', 'medico', 'CRM-PB 1234', 'Cardiologia', NULL, NULL),
+('Dra. Marta Souza','marta@clinica.com',  '123456', 'medico', 'CRM-PB 5678', 'Pediatria', NULL, NULL),
+('João Pereira',    'joao@email.com',     '123456', 'paciente', NULL, NULL, '11111111111', '83999990001'),
+('Maria Alves',     'maria@email.com',    '123456', 'paciente', NULL, NULL, '22222222222', '83999990002'),
+('Pedro Santos',    'pedro@email.com',    '123456', 'paciente', NULL, NULL, '33333333333', '83999990003');
+
+INSERT INTO consultas (paciente_id, medico_id, data_hora, status, observacoes) VALUES
+(4, 2, '2026-11-20 09:00:00', 'agendada',  NULL),
+(5, 2, '2026-11-20 10:00:00', 'agendada',  NULL),
+(6, 3, '2026-11-05 14:00:00', 'realizada', 'Paciente em bom estado.'),
+(4, 3, '2026-11-02 08:30:00', 'cancelada', NULL);
